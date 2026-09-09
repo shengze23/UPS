@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "OpenUPS verified read command profile",
+  "type": "object",
+  "required": ["profile_name", "source", "read_only", "requests"],
+  "properties": {
+    "profile_name": {"type": "string", "minLength": 1},
+    "source": {"type": "string", "minLength": 1},
+    "read_only": {"const": true},
+    "requests": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["name", "tx_hex", "response_length", "fields"],
+        "properties": {
+          "name": {"type": "string"},
+          "tx_hex": {"type": "string", "description": "Exact proven outbound bytes, including a report ID only if the working code uses one."},
+          "response_length": {"type": "integer", "minimum": 1, "maximum": 4096},
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["target", "kind", "offset"],
+              "properties": {
+                "target": {"type": "string"},
+                "kind": {"enum": ["u8", "s8", "u16le", "s16le", "u32le", "s32le", "f32le"]},
+                "offset": {"type": "integer", "minimum": 0},
+                "scale": {"type": "number"},
+                "bit": {"type": "integer", "minimum": 0, "maximum": 7}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
